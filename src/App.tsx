@@ -12,6 +12,17 @@ import InputSingleFile from "./components/input-single-file";
 import { useForm } from "react-hook-form";
 import ImageFilePreview from "./components/image-file-preview";
 
+import {
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from "./components/dialog";
+import Text from "./components/text";
+
 export default function App() {
   const form = useForm();
   const file = form.watch("file");
@@ -73,6 +84,35 @@ export default function App() {
           replaceBy={<ImageFilePreview src={fileSource} alt="Imagem" />}
           {...form.register("file")}
         />
+      </div>
+
+      <div className="relative">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Abrir Modal</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>Teste dialog</DialogHeader>
+            <DialogBody>
+              <Text as="div" className="mb-4">
+                Conteúdo do dialog
+              </Text>
+              <InputSingleFile
+                form={form}
+                allowedExtensions={["png", "jpg", "jpeg", "webp"]}
+                maxFileSizeInMB={50}
+                replaceBy={<ImageFilePreview src={fileSource} alt="Imagem" />}
+                {...form.register("file")}
+              />
+            </DialogBody>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="secondary">Cancelar</Button>
+              </DialogClose>
+              <Button>Adicionar</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
