@@ -9,11 +9,20 @@ import AlbumsListSelectable from "../context/albums/components/albums-list-selec
 import useAlbums from "../context/albums/hooks/use-albums";
 import usePhoto from "../context/photos/hooks/use-photo";
 import type { Photo } from "../context/photos/models/photo";
+import React from "react";
 
 export default function PagePhotoDetails() {
   const { id } = useParams();
-  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto } = usePhoto(id);
+  const { photo, previousPhotoId, nextPhotoId, isLoadingPhoto, deletePhoto } =
+    usePhoto(id);
   const { albums, isLoadingAlbums } = useAlbums();
+  const [isDeletingPhoto, setIsDeletingPhoto] = React.useTransition();
+
+  function heandleDeletePhoto() {
+    setIsDeletingPhoto(async () => {
+      await deletePhoto(photo!.id);
+    });
+  }
 
   if (!isLoadingPhoto && !photo) {
     return <div>Foto não encontrada!</div>;
@@ -49,7 +58,13 @@ export default function PagePhotoDetails() {
             <Skeleton className="h-[21rem]" />
           )}
           {!isLoadingPhoto ? (
-            <Button variant="destructive">Excluir</Button>
+            <Button
+              variant="destructive"
+              onClick={heandleDeletePhoto}
+              disabled={isDeletingPhoto}
+            >
+              {isDeletingPhoto ? "Excluindo..." : "Excluir"}
+            </Button>
           ) : (
             <Skeleton className="w-20 h-10" />
           )}
